@@ -18,12 +18,20 @@ insert (x:xs) (Trie i m) = Trie i $ Map.insert x updatedChild m
           child = Map.findWithDefault def x m
           def = Trie 0 Map.empty
 
-remove :: (Ord a) => [a] -> Trie a -> Maybe (Trie a)
-remove [] (Trie 1 m) = if Map.size m == 0
+removeH :: (Ord a) => [a] -> Trie a -> Maybe (Trie a)
+removeH [] (Trie 1 m) = if Map.size m == 0
     then Nothing
     else Just (Trie 0 m)
-remove (x:xs) (Trie i m) = Just (Trie i updatedM)
-    where updatedM = Map.update (remove xs) x m
+removeH [] (Trie i m)
+    | i == 0 = Just (Trie i m) -- word not in the trie
+    | i == 1 && Map.size m == 0 = Nothing -- this is a leaf, we delete
+    | otherwise = Just (Trie (i - 1) m)
+removeH (x:xs) (Trie i m)
+    | i == 0 && Map.size updatedM == 0 = Nothing
+    | otherwise = Just (Trie i updatedM)
+    where updatedM = Map.update (removeH xs) x m
+
+remove str t = fromMaybe (Trie 0 Map.empty) (removeH str t)
 
 countPrefix :: (Ord a) => [a] -> Trie a -> Int
 countPrefix [] (Trie i m)
@@ -57,7 +65,7 @@ deleteFromTrie t = do
     word <- getLine
     if word == ""
        then return t
-       else maybe (return $ Trie 0 Map.empty) deleteFromTrie (remove word t)
+       else deleteFromTrie (remove word t)
 
 main :: IO()
 main = do builtTrie <- buildTrieFromInput
