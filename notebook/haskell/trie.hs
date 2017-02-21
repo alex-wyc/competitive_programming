@@ -3,7 +3,9 @@ import Data.Map (Map)
 import qualified Data.Map as Map
 import Control.Monad
 
-data Trie a = Null | Trie Int (Map a (Trie a))
+data Trie a = Trie { wordCount :: Int
+                   , children :: Map a (Trie a)
+                   }
 
 size :: Trie a -> Int -- number of words / arrays stores in the trie
 size (Trie i m)
