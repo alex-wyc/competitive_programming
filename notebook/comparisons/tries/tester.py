@@ -5,7 +5,9 @@ m = 1000000
 
 f = open('/etc/dictionaries-common/words', 'r').read().split()
 
-filtered_list = [s for s in f if s.isalnum()]
+lower = lambda str: all([c.islower() for c in str])
+
+filtered_list = [s for s in f if lower(s)]
 
 g = open('testfile', 'w')
 
