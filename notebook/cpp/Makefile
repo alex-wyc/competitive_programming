@@ -1,15 +1,13 @@
 all:
 	for 
 
-test-sssp: sssp
+test-sssp: dijkstra spfa bellman-ford random-graph
 	time ./dijkstra.out < testfile > dijkstraoutput
 	time ./spfa.out < testfile > spfaoutput
 	time ./bellman-ford.out < testfile > bellmanfordoutput
-	diff dijkstraoutput spfaoutput
-	diff dijkstraoutput bellmanfordoutput
 
-sssp: sssp.py dijkstra spfa bellman-ford
-	python sssp.py
+random-graph: random-graph.py
+	python random-graph.py
 
 dijkstra: dijkstra.cpp
 	g++ -std=c++11 dijkstra.cpp -o dijkstra.out
@@ -23,13 +21,9 @@ bellman-ford: bellman-ford.cpp
 floyd-warshall: floyd-warshall.cpp
 	g++ -std=c++11 floyd-warshall.cpp -o floyd-warshall.out
 
-test-mst: mst
+test-mst: prims kruskals random-graph
 	time ./prims.out < testfile > primsoutput
 	time ./kruskals.out < testfile > kruskalsoutput
-	diff primsoutput kruskalsoutput
-
-mst: mst.py
-	python mst.py
 
 prims: prims.cpp
 	g++ -std=c++11 prims.cpp -o prims.out

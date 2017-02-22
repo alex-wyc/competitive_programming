@@ -1,4 +1,4 @@
-# single source shortest path tester
+# random graph generator
 
 import random
 
