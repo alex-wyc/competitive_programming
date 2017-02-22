@@ -32,7 +32,7 @@ class Graph {
             frontier.push(edges[0][i]);
         }
 
-        while (span != V) {
+        while (!frontier.empty() && span != V) {
             vertex_priority vp = frontier.top(); frontier.pop();
             int weight = vp.first;
             int v = vp.second;
@@ -45,7 +45,9 @@ class Graph {
             span++;
 
             for (int i = 0 ; i < edges[v].size() ; i++) {
-                frontier.push(edges[v][i]);
+                if (!visited[edges[v][i].second]) {
+                    frontier.push(edges[v][i]);
+                }
             }
         }
 
