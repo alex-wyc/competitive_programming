@@ -2,8 +2,8 @@
 
 import random
 
-V = 100000
-E = 10000000
+V = 1000
+E = 100000
 MAX_EDGE = 100
 
 f = open('testfile', 'w')
