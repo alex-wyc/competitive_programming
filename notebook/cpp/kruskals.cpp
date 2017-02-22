@@ -67,3 +67,19 @@ class Graph {
         return mst_weight;
     };
 };
+
+int main(int argc, char *argv[]) {
+    int v, e;
+    cin >> v >> e;
+
+    Graph g(v);
+
+    for (int i = 0 ; i < e ; i++) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        g.add_edge(u, v, w);
+    }
+
+    cout << g.get_mst() << '\n';
+    return 0;
+}

@@ -1,4 +1,4 @@
-#include <bits/std++.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -24,7 +24,7 @@ class Graph {
     };
 
     // this will populate the dist array
-    void dijkstras(int s) {
+    void dijkstra(int s) {
         bool visited[V];
         memset(visited, V, false);
 
@@ -110,5 +110,26 @@ class Graph {
         }
 
         return dist[d];
+    };
+};
+
+int main(int argc, char *argv[]) {
+
+    int v, e;
+    cin >> v >> e;
+
+    Graph g(v);
+
+    for (int i = 0 ; i < e ; i++) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        g.add_edge(u, v, w);
     }
+
+    g.dijkstra(0);
+
+    for (int i = 0 ; i < v ; i++) {
+        cout << g.dist[i] << '\n';
+    }
+    return 0;
 }
