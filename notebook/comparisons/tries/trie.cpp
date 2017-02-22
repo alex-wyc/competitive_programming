@@ -1,120 +1,82 @@
-#include <iostream>
-#include <iomanip>
-#include <cstdio>
-#include <vector>
-#include <map>
-#include <set>
-#include <utility>
-#include <stack>
-#include <queue>
-#include <cstring>
-#include <algorithm>
-#include <sstream>
-#include <cstdlib>
-
-#define REP(i, x) for(int i = 0; i < x; i++)
-#define REPS(i, s, x) for(int i = s; i < x; i++)
-#define newl '\n'
-#define dbg cerr
-#define ll long long
-#define ii pair<int, int>
-#define iii pair <ii, int>
-#define iiii pair<ii, ii>
-#define vi vector <int>
-#define vii vector <ii>
-#define vs vector <string>
-#define PB push_back
-#define INF 1000000008
-#define all(x) x.begin(), x.end()
+#include <bits/stdc++.h>
 
 using namespace std;
 
-class trie{
-    struct counts
-    {
-        int pc = 0; //prefix count - num of words that begin with current node
-        bool we = false; //word end - whether current node is the end of a word
+int get_index(char c) {
+    return c - 'a';
+}
+
+struct trie {
+    vector<int> wordCount;
+    vector<int> prefixCount;
+    vector<int> edges[26];
+    int size;
+    int max_size;
+
+    trie(int ms) {
+        max_size = ms;
+        size = 1;
+        wordCount = vector<int>(ms, 0);
+        prefixCount = vector<int>(ms, 0);
+        for (int i = 0 ; i < 26 ; i++) {
+            edges[i] = vector<int>(ms, -1);
+        }
     };
 
-    private:
-        map <pair <char, int>, int> t; //maps (x, y) to z, where x is the value of and y is the parent of node z
-        map <int, counts> tc; //maps x to y where y contains the counts of node x
-        int nn = 0; //number of nodes that exist in the trie
+    void insert(char *str) {
+        int current_node = 0;
+        char head;
+        while ((head = *str++)) {
+            prefixCount[current_node]++;
 
-    public:
-        map <pair <char, int>, int> getTrie()
-        {
-            return t;
-        }
-
-        map <int, counts> getTotalCounts()
-        {
-            return tc;
-        }
-
-        /* input: string to be inserted
-        *  Runs in O(|S| * log(N)) time; |S| = length of the string being inserted; N = number of nodes in the trie
-        *  output: true or false depending on whether s is in trie or not respectively
-        */
-        void addWord(string s) //
-        {
-            int v = 0;
-            tc[0].pc += 1;
-            for (char ch: s)
-            {
-                if (t.count({ch, v}) == 0) //if there is not an edge that goes from node v to a node with ch, create one
-                {
-                    t[{ch, v}] = ++nn;
-                }
-                v = t[{ch, v}];
-                tc[v].pc += 1;
+            if (edges[get_index(head)][current_node] == -1) {
+                edges[get_index(head)][current_node] = size;
+                size++;
             }
-            tc[v].we = true;
+        }
+        prefixCount[current_node]++;
+        wordCount[current_node]++;
+    };
+
+    int contains(char *str) {
+        int current_node = 0;
+        char head;
+        while ((head == *str++)) {
+            prefixCount[current_node]++;
+
+            if (edges[get_index(head)][current_node] == -1) {
+                return 0;
+            }
+
+            current_node = edges[get_index(head)][current_node];
         }
 
-        /* input: string that needs to be found in trie
-        *  Runs in O(|S| * log(N)) time; |S| = length of string that's being found; N = number of nodes in trie
-        *  output: true or false depending on whether s is in trie or not respectively
-        */
-        bool findWord(string s) //finds word in O(|S| * log(N)) time
-        {
-            int v = 0;
-            for(char ch: s)
-            {
-                if (t.count({ch, v}) == 0)
-                {
-                    return false;
-                }
-                v = t[{ch, v}];
-            }
-            return tc[v].we;
-        }
+        return wordCount[current_node];
+    }
+
 };
 
-/* input: insert n words into trie, then make m queries
-*  output: whether any of the queries are found or not
-*/
-int main()
-{
-    int n, m;
-    string tempWord;
-    trie timpl = trie();
-
-    cin>>n;
+int main(int argc, char *argv[]) {
+    int N, M;
+    cin >> N;
     cin.get();
 
-    REP(i, n)
-    {
-        getline(cin, tempWord);
-        timpl.addWord(tempWord);
+    trie t(10000);
+
+    for (int i = 0 ; i < N ; i++) {
+        char buffer[256];
+        cin.getline(buffer, 256);
+        t.insert(buffer);
     }
 
-    cin>>m;
+    cin >> M;
     cin.get();
 
-    REP(i, m)
-    {
-        getline(cin, tempWord);
-        cout<<(timpl.findWord(tempWord) ? "True" : "False")<<newl;
+    for (int i = 0 ; i < N ; i++) {
+        char buffer[256];
+        cin.getline(buffer, 256);
+        cout << (t.contains(buffer) ? "True" : "False") << '\n';
     }
+
+    return 0;
 }
