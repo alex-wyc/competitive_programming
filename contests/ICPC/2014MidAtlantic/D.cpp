@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <string.h>
+
+#define MAXN 1000000
+
+using namespace std;
+
+
+int excess(int n, vector <int> &p)
+{
+    int temp = n;
+    int numfactor = 0;
+    int multi = 0;
+    for (int i: p)
+    {
+        if (i > temp)
+        {
+            
+            break;
+        }
+        if (temp%i == 0)
+        {
+            numfactor++;
+        }
+        
+        while(temp%i == 0)
+        {
+            temp/=i;
+            multi++;
+        }
+        
+       
+    }
+    
+    return multi - numfactor;
+}
+
+int main(){
+   vector <int> primes;
+   int visited[1000];
+   memset(visited, 0, sizeof(visited));
+   
+   for(int i = 2; i * i < 10000; i++)
+   {
+        if (visited[i] == 0)
+        {
+            primes.push_back(i);
+        }
+       for(int j = i * i; j < 1000; j+=i)
+       {
+            visited[j] = 1;
+       }
+   }
+   
+   //cout<<"excess "<<excess(8, primes);
+   
+   int n, m;
+   while(cin>>n>>m and !(n==0 and m==0))
+   {
+        int maxi = -1;
+        int maxn = -1;
+        for(int i = n; i <= m; i++)
+        {
+
+            int temp = excess(i, primes);
+            if (temp> maxi)
+            {
+            
+                maxi = temp;
+                maxn = i;
+            }
+
+              
+        }
+        cout<<maxn<<'\n';
+   }
+   
+   
+    
+}
