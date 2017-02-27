@@ -18,7 +18,10 @@ bellman-ford: bellman-ford.cpp
 floyd-warshall: floyd-warshall.cpp
 	g++ -std=c++11 floyd-warshall.cpp -o floyd-warshall.out
 
-test-mst: prims kruskals random-graph
+connected-graph: connected-graph.py
+	python connected-graph.py
+
+test-mst: prims kruskals connected-graph
 	time ./prims.out < testfile > prims.output
 	time ./kruskals.out < testfile > kruskals.output
 
