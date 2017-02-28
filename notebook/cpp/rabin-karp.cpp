@@ -42,9 +42,9 @@ int rabin_karp(vector<char> &text, vector<char> &to_search) {
     long long hash_text = hash_val(text, 0, m);
 
     if (hash_pattern == hash_text) {
-        if (check_equal_range(text, to_search, 0)) {
+        //if (check_equal_range(text, to_search, 0)) {
             return 0;
-        }
+        //}
     }
 
     long long leading_exp = 1;
@@ -52,24 +52,16 @@ int rabin_karp(vector<char> &text, vector<char> &to_search) {
         leading_exp = mod(leading_exp * B, P);
     }
 
-    //cout << leading_exp << '\n';
-
-    //cout << hash_text << " " << hash_pattern << '\n';
 
     for (int i = m ; i < n ; i++) {
-        //cout << i << '\n';
         hash_text = mod(hash_text - mod(text[i - m] * leading_exp, P), P);
         hash_text = mod(hash_text * B, P);
         hash_text = mod(hash_text + text[i], P);
 
-        //cout << hash_text << " " << hash_pattern << '\n';
-
         if (hash_text == hash_pattern) {
-            // potential match
-            //cout << "HI\n";
-            if (check_equal_range(text, to_search, i - m + 1)) {
+            //if (check_equal_range(text, to_search, i - m + 1)) {
                 return i - m + 1;
-            }
+            //}
         }
     }
 
@@ -77,12 +69,16 @@ int rabin_karp(vector<char> &text, vector<char> &to_search) {
 }
 
 int main(int argc, char *argv[]) {
-    string text, pattern;
-    cin >> text >> pattern;
+    int N;
+    cin >> N;
+    for (int i = 0 ; i < N ; i++) {
+        string text, pattern;
+        cin >> text >> pattern;
 
-    vector<char> v_text(text.begin(), text.end());
-    vector<char> v_pat(pattern.begin(), pattern.end());
+        vector<char> v_text(text.begin(), text.end());
+        vector<char> v_pat(pattern.begin(), pattern.end());
 
-    cout << rabin_karp(v_text, v_pat) << '\n';
+        cout << rabin_karp(v_text, v_pat) << '\n';
+    }
     return 0;
 }
