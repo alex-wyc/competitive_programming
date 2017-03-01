@@ -21,13 +21,12 @@ class suffix_array {
         inverse_sorted_suffix = vector<int>(n);
 
         vector<vector<int> > buckets(ALPHABET_SIZE); // change for other keysets
-        int same_rank[n]; // this is a lookup table of where the sorted range ends
 
         for (int i = 0 ; i < n ; i++) {
             buckets[suffixes[i].at(0)].push_back(i); // change for other keysets
         }
 
-        vector<int> uncertain_range(n);
+        int uncertain_range[n];
 
         int x = 0;
         int o;
@@ -46,26 +45,28 @@ class suffix_array {
             }
         }
 
-        char current;
         bool continuing = true;
+        int i, endpt;
+        int bucketss[n];
 
         for (int step = 1 ; continuing && step < n ; step = step * 2) {
             continuing = false;
-            int i = 0;
+            i = 0;
             while (i < n) {
                 if (uncertain_range[i] != i + 1) { // this range is not yet sorted
                     continuing = true;
-                    int endpt = uncertain_range[i];
+                    endpt = uncertain_range[i];
 
-                    vector<int> bucketss(n, -1);
+                    memset(bucketss, -1, sizeof(bucketss));
                     for (int j = i ; j < endpt ; j++) {
                         // we sort this range based on what we know
                         bucketss[inverse_sorted_suffix[sorted_suffix[j] - step]] = sorted_suffix[j];
                     }
 
-                    int x = 0;
-                    vector<int> correct_order(endpt - i);
-                    vector<int> uncertain_suffix_range(endpt - i);
+                    x = 0;
+                    int correct_order[endpt - i];
+                    int uncertain_suffix_range[endpt - i];
+
                     for (int j = 0 ; j < n ; j++) {
                         if (bucketss[j] != -1) {
                             correct_order[x] = bucketss[j];
@@ -114,16 +115,13 @@ class suffix_array {
             }
         }
 
-        //if (suffixes[sorted_suffix[l]].compare(pattern) == 0) {
-        //    return suffixes.size() - sorted_suffix[l] - 1;
-        //}
         return -1;
     };
 
-    vector<int> search(string pattern) {
-        // because sorted_suffix exists, we can search for *all* occurences via
-        // two binary searches
-    };
+    //vector<int> search(string pattern) {
+    //    // because sorted_suffix exists, we can search for *all* occurences via
+    //    // two binary searches
+    //};
 };
 
 int main(int argc, char *argv[]) {
