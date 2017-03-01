@@ -1,7 +1,7 @@
 test-sssp: dijkstra spfa bellman-ford random-graph
 	time ./dijkstra.out < testfile > dijkstra.output
 	time ./spfa.out < testfile > spfa.output
-	time ./bellman-ford.out < testfile > bellmanford.output
+	time ./bellman-ford.out < testfile > bf.output
 
 random-graph: random-graph.py
 	python random-graph.py
@@ -34,12 +34,16 @@ kruskals: kruskals.cpp
 trie: trie.cpp
 	g++ -std=c++11 trie.cpp -o trie.out
 
-test-string-matching: rabin-karp
+test-string-matching: rabin-karp suffix-array
 	python stringmatching.py
 	time ./rabin-karp.out < testfile > rk.output
+	time ./suffix-array.out < testfile > sa.output
 
 rabin-karp: rabin-karp.cpp
 	g++ -std=c++11 rabin-karp.cpp -o rabin-karp.out
+
+suffix-array: suffix-array.cpp
+	g++ -std=c++11 suffix-array.cpp -o suffix-array.out
 
 clean:
 	rm *.out

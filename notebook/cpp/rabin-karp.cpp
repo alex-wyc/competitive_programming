@@ -19,17 +19,6 @@ long long hash_val(vector<char> &to_hash, int s, int n) {
     return hv;
 }
 
-bool check_equal_range(vector<char> &text, vector<char> &to_search, int s) {
-    // checks if the two are actually equal
-    int sz = to_search.size();
-    for (int i = 0 ; i < sz ; i++) {
-        if (text[s + i] != to_search[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
 int rabin_karp(vector<char> &text, vector<char> &to_search) {
     int n = text.size();
     int m = to_search.size();
@@ -42,9 +31,7 @@ int rabin_karp(vector<char> &text, vector<char> &to_search) {
     long long hash_text = hash_val(text, 0, m);
 
     if (hash_pattern == hash_text) {
-        //if (check_equal_range(text, to_search, 0)) {
             return 0;
-        //}
     }
 
     long long leading_exp = 1;
@@ -59,9 +46,7 @@ int rabin_karp(vector<char> &text, vector<char> &to_search) {
         hash_text = mod(hash_text + text[i], P);
 
         if (hash_text == hash_pattern) {
-            //if (check_equal_range(text, to_search, i - m + 1)) {
                 return i - m + 1;
-            //}
         }
     }
 

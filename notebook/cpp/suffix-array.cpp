@@ -8,7 +8,8 @@ class suffix_array {
     vector<string> suffixes;
     vector<int> sorted_suffix;
     vector<int> inverse_sorted_suffix;
-    public:
+
+  public:
     suffix_array(string text) {
         int n = text.size();
 
@@ -16,19 +17,14 @@ class suffix_array {
             suffixes.push_back(text.substr(i, n - i));
         }
 
-        for (int i = 0 ; i< n ; i++) {
-            cout << suffixes[i] << " ";
-        }
-        cout << '\n';
-
         sorted_suffix = vector<int>(n);
         inverse_sorted_suffix = vector<int>(n);
 
-        vector<vector<int> > buckets(ALPHABET_SIZE);
+        vector<vector<int> > buckets(ALPHABET_SIZE); // change for other keysets
         int same_rank[n]; // this is a lookup table of where the sorted range ends
 
         for (int i = 0 ; i < n ; i++) {
-            buckets[suffixes[i].at(0)].push_back(i);
+            buckets[suffixes[i].at(0)].push_back(i); // change for other keysets
         }
 
         vector<int> uncertain_range(n);
@@ -50,26 +46,16 @@ class suffix_array {
             }
         }
 
-        for (int i = 0 ; i < n ; i++) {
-            cout << sorted_suffix[i] << " " << inverse_sorted_suffix[i] << " " << uncertain_range[i] << "\n";
-        }
-
         char current;
         bool continuing = true;
 
         for (int step = 1 ; continuing && step < n ; step = step * 2) {
-            cout << "*** " << step << " ***\n";
             continuing = false;
             int i = 0;
             while (i < n) {
                 if (uncertain_range[i] != i + 1) { // this range is not yet sorted
                     continuing = true;
                     int endpt = uncertain_range[i];
-
-                    cout << "---\n";
-                    for (int j = i ; j < endpt ; j++)
-                        cout << suffixes[sorted_suffix[j]] << ' ';
-                    cout << "\n";
 
                     vector<int> bucketss(n, -1);
                     for (int j = i ; j < endpt ; j++) {
@@ -104,35 +90,52 @@ class suffix_array {
                         }
                     }
 
-                    for (int j = 0 ; j < n ; j++) {
-                        cout << sorted_suffix[j] << " ";
-                    }
-                    cout << "\n";
-                    for (int j = 0 ; j < n ; j++) {
-                        cout << inverse_sorted_suffix[j] << " ";
-                    }
-                    cout << "\n";
-                    for (int j = 0 ; j < n ; j++) {
-                        cout << uncertain_range[j] << " ";
-                    }
-                    cout << "\n";
-
-                    cout << "---\n";
                     i = endpt; // we jump to the end eventually
                 }
                 i++;
             }
         }
+    };
 
-        for (int i = 0 ; i < sorted_suffix.size() ; i++) {
-            cout << suffixes[sorted_suffix[i]] << '\n';
+    int search_first(string pattern) {
+        // because sorted_suffix exists, we can do a binary search
+        int l = 0, r = sorted_suffix.size() - 1;
+
+        while (l <= r) {
+            int m = (l + r) / 2;
+            if (suffixes[sorted_suffix[m]].compare(pattern) > 0) {
+                r = m - 1;
+            }
+            else if (suffixes[sorted_suffix[m]].compare(pattern) == 0) {
+                return suffixes.size() - sorted_suffix[m] - 1;
+            }
+            else {
+                l = m + 1;
+            }
         }
+
+        //if (suffixes[sorted_suffix[l]].compare(pattern) == 0) {
+        //    return suffixes.size() - sorted_suffix[l] - 1;
+        //}
+        return -1;
+    };
+
+    vector<int> search(string pattern) {
+        // because sorted_suffix exists, we can search for *all* occurences via
+        // two binary searches
     };
 };
 
 int main(int argc, char *argv[]) {
-    string blah;
-    cin >> blah;
-    suffix_array sa(blah);
+    int N;
+    cin >> N;
+    for (int i = 0 ; i < N ; i++) {
+        string text, pattern;
+        cin >> text >> pattern;
+
+        suffix_array sa(text);
+
+        cout << sa.search_first(pattern) << '\n';
+    }
     return 0;
 }
