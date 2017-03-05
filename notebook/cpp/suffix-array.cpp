@@ -4,6 +4,22 @@ using namespace std;
 
 #define ALPHABET_SIZE 128 // default to ascii
 
+int prefix_cmp(string a, string b) {
+    // returns the comparison of b to the prefix of a of length b
+    if (b.size() > a.size()) {
+        return a.compare(b);
+    }
+    for (int i = 0 ; i < b.size() ; i++) {
+        if (a.at(i) > b.at(i)) {
+            return 1;
+        }
+        else if (a.at(i) < b.at(i)) {
+            return -1;
+        }
+    }
+    return 0;
+}
+
 class suffix_array {
     vector<string> suffixes;
     vector<int> sorted_suffix;
@@ -98,16 +114,17 @@ class suffix_array {
         }
     };
 
-    int search_first(string pattern) {
+    int search_one(string pattern) {
         // because sorted_suffix exists, we can do a binary search
         int l = 0, r = sorted_suffix.size() - 1;
 
         while (l <= r) {
             int m = (l + r) / 2;
-            if (suffixes[sorted_suffix[m]].compare(pattern) > 0) {
+            int flag = prefix_cmp(suffixes[sorted_suffix[m]], pattern) ;
+            if (flag > 0) {
                 r = m - 1;
             }
-            else if (suffixes[sorted_suffix[m]].compare(pattern) == 0) {
+            else if (flag == 0) {
                 return suffixes.size() - sorted_suffix[m] - 1;
             }
             else {
@@ -118,10 +135,51 @@ class suffix_array {
         return -1;
     };
 
-    //vector<int> search(string pattern) {
-    //    // because sorted_suffix exists, we can search for *all* occurences via
-    //    // two binary searches
-    //};
+    vector<int> search(string pattern) {
+        // because sorted_suffix exists, we can search for *all* occurences via
+        // two binary searches
+        int lower, upper;
+        int l = 0, r = sorted_suffix.size() - 1;
+
+        while (l <= r) {
+            int m = (l + r) / 2;
+            int flag = prefix_cmp(suffixes[sorted_suffix[m]], pattern);
+
+            if (flag >= 0) {
+                r = m - 1;
+            }
+            else {
+                l = m + 1;
+            }
+        }
+
+        lower = l;
+
+        l = 0;
+        r = sorted_suffix.size() - 1;
+
+        while (l <= r) {
+            int m = (l + r) / 2;
+            int flag = prefix_cmp(suffixes[sorted_suffix[m]], pattern);
+
+            if (flag > 0) {
+                r = m - 1;
+            }
+            else {
+                l = m + 1;
+            }
+        }
+
+        upper = r + 1;
+
+        vector<int> results(upper - lower);
+
+        for (int i = 0 ; i < upper - lower ; i++) {
+            results[i] = suffixes.size() - sorted_suffix[lower + i] - 1;
+        }
+    
+        return results;
+    };
 };
 
 int main(int argc, char *argv[]) {
@@ -132,8 +190,12 @@ int main(int argc, char *argv[]) {
         cin >> text >> pattern;
 
         suffix_array sa(text);
+        vector<int> results = sa.search(pattern);
+        for (int i = 0 ; i < results.size() ; i++) {
+            cout << results[i] << " ";
+        }
+        cout << '\n';
 
-        cout << sa.search_first(pattern) << '\n';
     }
     return 0;
 }
