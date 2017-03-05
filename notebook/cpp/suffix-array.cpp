@@ -33,6 +33,12 @@ class suffix_array {
             suffixes.push_back(text.substr(i, n - i));
         }
 
+        //for (int i = 0 ; i < n ; i++) {
+        //    cout << suffixes[i] << ' ';
+        //}
+
+        //cout << '\n';
+
         sorted_suffix = vector<int>(n);
         inverse_sorted_suffix = vector<int>(n);
 
@@ -65,7 +71,13 @@ class suffix_array {
         int i, endpt;
         int bucketss[n];
 
+        //for (int j = 0 ; j < n ; j++) {
+        //    cout << sorted_suffix[j] << " " << inverse_sorted_suffix[j] << " ";
+        //    cout << uncertain_range[j] << '\n';
+        //}
+
         for (int step = 1 ; continuing && step < n ; step = step * 2) {
+            //cout << "++++" << step << "++++\n";
             continuing = false;
             i = 0;
             while (i < n) {
@@ -107,10 +119,14 @@ class suffix_array {
                         }
                     }
 
-                    i = endpt; // we jump to the end eventually
+                    i = endpt - 1; // we jump to the end eventually
                 }
                 i++;
             }
+            //for (int j = 0 ; j < n ; j++) {
+            //    cout << sorted_suffix[j] << " " << inverse_sorted_suffix[j] << " ";
+            //    cout << uncertain_range[j] << '\n';
+            //}
         }
     };
 
