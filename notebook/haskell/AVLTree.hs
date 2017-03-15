@@ -10,6 +10,8 @@ module AVLTree
 , size
 , height
 , search
+, findMin
+, inorder
 --, avlJoin
 --, avlSplit
 --, avlUnion
@@ -70,9 +72,9 @@ avlRemove (Node c l r) a
                     (Null, Null) -> Null
                     (l, Null) -> l
                     (Null, r) -> r
-                    (l, r) -> balance (Node lmax lnew r)
-                        where lnew = avlRemove l lmax
-                              lmax = findMax l
+                    (l, r) -> balance (Node rmin l rnew)
+                        where rnew = avlRemove r rmin
+                              rmin = findMin r
     | a < c = balance (Node c ld r)
     | a > c = balance (Node c l rd)
     where ld = avlRemove l a

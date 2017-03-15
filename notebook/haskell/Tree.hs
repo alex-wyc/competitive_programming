@@ -9,7 +9,7 @@ module Tree
 , insert
 , remove
 , findMin
-, findMax
+, inorder
 ) where
 
 data Tree a = Null | Node { content :: a
@@ -26,6 +26,11 @@ instance Eq a => Eq (Tree a) where
     Null == Node _ _ _ = False
     Node _ _ _ == Null = False
     Node c1 l1 r1 == Node c2 l2 r2 = (c1 == c2) && (l1 == l2) && (r1 == r2)
+
+inorder Null = []
+inorder (Node c l r) = (inorder l) ++ [c] ++ (inorder r)
+
+findMin = head . inorder
 
 size :: Tree a -> Int
 size Null = 0
@@ -49,26 +54,16 @@ height :: Tree a -> Int
 height Null = 0
 height (Node _ l r) = 1 + max (height l) (height r)
 
-findMax tree = if rightChild tree == Null then content tree else findMax $ rightChild tree
-
-removeMax :: Tree a -> Tree a
-removeMax (Node _ _ Null) = Null
-removeMax (Node c l r) = Node c l $ removeMax r
-
-findMin tree = if leftChild tree == Null then content tree else findMin $ leftChild tree
-
-removeMin :: Tree a -> Tree a
-removeMin (Node c Null _) = Null
-removeMin (Node c l r) = Node c (removeMin l) r
-
-remove :: (Ord a) => a -> Tree a -> Tree a
-remove a Null = Null
-remove a (Node c l r) = if a == c
+remove :: (Ord a) => Tree a -> a -> Tree a
+remove Null a = Null
+remove (Node c l r) a = if a == c
                           then case (l, r) of
                               (Null, Null) -> Null -- leaf
                               (l, Null) -> l -- only left node
                               (Null, r) -> r -- only right node
-                              (l, r) -> Node (findMax l) (removeMax l) r -- both
+                              (l, r) -> Node rmin l rnew -- both
+                                  where rnew = remove r rmin
+                                        rmin = findMin r
                           else if a < c
-                                  then Node c (remove a l) r
-                                  else Node c l (remove a r)
+                                  then Node c (remove l a) r
+                                  else Node c l (remove r a)
