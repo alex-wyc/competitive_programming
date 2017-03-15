@@ -5,6 +5,7 @@ import AVLTree
 constructTree :: IO(Tree Int)
 constructTree = build (Null)
     where build avlTree = do print avlTree
+                             print $ isBalanced avlTree
                              word <- getLine
                              if word == ""
                                 then return avlTree
@@ -12,6 +13,7 @@ constructTree = build (Null)
 
 deleteFromTree :: Tree Int -> IO(Tree Int)
 deleteFromTree t = do print t
+                      print $ isBalanced t
                       word <- getLine
                       if word == ""
                          then return t
