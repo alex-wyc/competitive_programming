@@ -28,16 +28,16 @@ searchInTree t = do word <- getLine
                            searchInTree t
 
 -- interactive main
---main :: IO()
---main = do
---    test <- constructTree
---    modifiedTest <- deleteFromTree test
---    searchInTree modifiedTest
-
--- speed test main
 main :: IO()
 main = do
-    word <- getLine
-    let size = (read word :: Int)
-        test = foldl (avlInsert) (Null) [1..size] in
-        print $ map (search test) [1..(2*size)]
+    test <- constructTree
+    modifiedTest <- deleteFromTree test
+    searchInTree modifiedTest
+
+-- speed test main
+-- main :: IO()
+-- main = do
+--     word <- getLine
+--     let size = (read word :: Int)
+--         test = foldl (avlInsert) (Null) [1..size] in
+--         print $ map (search test) [1..(2*size)]
