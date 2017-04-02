@@ -4,7 +4,7 @@ using namespace std;
 
 #define INF 1000000008
 
-class Graph {
+struct Graph {
     int V;
     int **E;
 

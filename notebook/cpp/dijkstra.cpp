@@ -6,7 +6,7 @@ using namespace std;
 
 typedef pair<int, int> vertex_priority;
 
-class Graph {
+struct Graph {
     int V;
     vector<vector<vertex_priority> > edges;
 

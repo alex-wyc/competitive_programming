@@ -6,7 +6,7 @@ using namespace std;
 
 typedef pair<int, int> edge;
 
-class Graph {
+struct Graph {
     int V;
     vector<vector<edge> > edges;
 

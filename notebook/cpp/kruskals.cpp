@@ -5,7 +5,7 @@ using namespace std;
 typedef pair<int, int> edge;
 typedef pair<int, edge> weighted_edge;
 
-class Graph {
+struct Graph {
     int V;
     priority_queue<weighted_edge, vector<weighted_edge>, greater<weighted_edge> > edges;
     vector<int> parents;
