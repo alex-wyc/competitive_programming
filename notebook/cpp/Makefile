@@ -45,6 +45,9 @@ rabin-karp: rabin-karp.cpp
 suffix-array: suffix-array.cpp
 	g++ -std=c++11 suffix-array.cpp -o suffix-array.out
 
+topsort: toposort.cpp
+	g++ -std=c++11 toposort.cpp -o toposort.out
+
 clean:
 	rm *.out
 	rm testfile
