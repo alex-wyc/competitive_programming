@@ -1,31 +1,17 @@
-<style TYPE="text/css">
-code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
-</style>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [['$','$'], ['\\(','\\)']],
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
-    }
-});
-MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-});
-</script>
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
 # SPFA algorithm
 
 The SPFA algorithm is an optimized version of Bellman-Ford that only makes visit
-it absolutely needs to. The algorithm runs in $O(|V| + k|E|)$ for some constant $k$
+it absolutely needs to. The algorithm runs in O(|V| + k|E|) for some constant k
 between 1 and V that is not determined by |V| or |E| but by the shape of the
 graph. Experimental evidence, however, show that on average k is approximately
 2, which makes the algorithm linear.
 
 ## Algorithm
+
+The algorithm relies on the fact that if we have an edge (i, j) that is not a part
+of the optimal path to j, then that edge won't be included in any shortest path to
+k that goes through j. Therefore we only need to further optimize any vertex j
+if one of the nodes that points to it has just been optimized.
 
 ## Pseudocode
 
@@ -67,3 +53,15 @@ however, that k is capped at |V| - 1. But empirical evidence shows that k is on
 average about 2, which makes the runtime of this algorithm as a whole O(|V| + (k |V| * |E| /
 |V|)) = O(|V| + k|E|) if we are using an adjacency list, but O(|V| + (k |V| *
 |V|)) = O(k|V|^2) if we are using an adjacency matrix.
+
+Do note, however, that if there were a negative edge cycle within the graph,
+spfa will keep going forever as `Queue` would never be empty. A slight
+modification, however, could count the number of times vertices are visited and
+break out as soon as that number exceeds |V| - 1. But this gives spfa the same
+runtime as Bellman-Ford in the worst case.
+
+## Original Paper
+
+The original paper is here: http://en.cnki.com.cn/Article_en/CJFDTOTAL-XNJT402.015.htm
+
+It is in Chinese, but it is free.
