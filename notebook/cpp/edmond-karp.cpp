@@ -21,15 +21,15 @@ class Graph {
         E[from][to] = weight;
     };
 
-    vector<int> dfs(int s, int t) {
+    vector<int> bfs(int s, int t) {
         vector<int> pred(V, -1);
         vector<int> visited(V, 0);
-        stack<int> frontier;
+        queue<int> frontier;
         frontier.push(s);
         visited[s] = 1;
 
         while (!frontier.empty()) {
-            int v = frontier.top(); frontier.pop();
+            int v = frontier.front(); frontier.pop();
 
             for (int i = 0 ; i < V ; i++) {
                 if (E[v][i] > 0 && !visited[i]) {
@@ -46,10 +46,10 @@ class Graph {
         return {};
     }
 
-    int ford_fulkerson(int s, int t) {
+    int edmond_karp(int s, int t) {
         int max_flow = 0;
 
-        vector<int> path = dfs(s, t);
+        vector<int> path = bfs(s, t);
 
         while (path.size()) { // while we have a path
             int path_flow = INF;
@@ -70,7 +70,7 @@ class Graph {
                 v = u;
             }
 
-            path = dfs(s, t);
+            path = bfs(s, t);
         }
 
         return max_flow;
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
 
     cin >> s >> t;
 
-    cout << g.ford_fulkerson(s, t) << '\n';
+    cout << g.edmond_karp(s, t) << '\n';
 
     return 0;
 }
